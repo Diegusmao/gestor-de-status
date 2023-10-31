@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { loginService } from '../login.service'; // Ajuste o caminho conforme a estrutura do seu projeto
-
+import { loginService } from '../login.service'; 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,10 +15,10 @@ export class LoginComponent {
 
   login(): void {
     if (this.loginService.authenticate(this.username, this.password)) {
-      // Autenticação bem-sucedida, redirecionar para a rota protegida (por exemplo, /projetos)
+      
       this.router.navigate(['/projetos']);
     } else {
-      // Exibir mensagem de erro se a autenticação falhar
+      
       this.errorMessage = 'Credenciais inválidas. Por favor, tente novamente.';
     }
   }
