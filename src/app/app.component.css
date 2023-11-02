@@ -1,6 +1,12 @@
-.conteiner {
-    width: "80%";
-    
-    margin: auto;
-    padding: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+h1{
+    text-align: center;
+    padding-top: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+.head_container{
+    background-color: var(--light-gray); 
+    height: 170px;
+    color: white;
 }

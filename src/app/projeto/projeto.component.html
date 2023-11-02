@@ -1,13 +1,24 @@
-<div>
-    <h3>Lista de Projetos</h3>
-    <ul *ngFor="let projeto of listaProjetos">
-        <li>
-            {{projeto.nome}}
-        </li>
+<div class="input_container">
+  <h3>Criar Projeto</h3>
+  <input #projetoInput type="text" placeholder="Nome do Projeto" [(ngModel)]="nomeProjeto" />
+  <button (click)="adicionarProjeto()">Criar Projeto</button>
+</div>
+
+<div class="container">
+  <div *ngFor="let projeto of listaProjetos" class="card">
+    <h4>{{ projeto.nome }}</h4>
+    <input type="text" placeholder="Adicionar Tarefa" [(ngModel)]="projeto.nomeTarefa" />
+    <button (click)="adicionarTarefa(projeto)">Adicionar Tarefa</button>
+
+    <ul>
+      <li *ngFor="let tarefa of projeto.tarefas">
+        <a [routerLink]="['/projeto', projeto.id, 'tarefa', tarefa.id]">
+          <label class="task-label">
+            {{ tarefa.nome }} <br> Concluída: {{ tarefa.concluida ? 'Sim' : 'Não' }}
+          </label>
+        </a>
+        <input type="checkbox" [(ngModel)]="tarefa.concluida" class="checkbox" />
+      </li>
     </ul>
-
-
-
-
-
+  </div>
 </div>
