@@ -1,5 +1,8 @@
+import { Tarefa } from "./tarefa.model";
+
 export interface Projeto {
     id: number;
     nome: string;
-    nomeGestor: string;
-}
+    nomeTarefa: string;
+    tarefas: Tarefa[];
+  }

@@ -18,13 +18,13 @@
     background-color: white;    
     font-weight: bold;
     padding: 20px;
-    color: var(--gray);
+    color: #D9D9D9;
 }
 
 .footer__title {
     font-size: 22px;
     font-weight: bold;
-    color: var(--blue);
+    color: rgb(33, 153, 107);
     margin-bottom: 5px;
 }
 
@@ -35,7 +35,7 @@
 
 
 .footer i {
-    color: var(--orange);
+    color: #581004;
 }
 
 .footer li {
