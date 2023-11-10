@@ -5,24 +5,23 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class loginService {
-  private loggedInUser: any; // Usuário autenticado
+  private loggedInUser: any;
 
   constructor(private router: Router) {}
 
   authenticate(username: string, password: string): boolean {
-    // Lógica de autenticação (substitua isso com sua lógica de autenticação real)
-    // Por exemplo, você pode verificar as credenciais em um servidor ou banco de dados
 
     if (username === 'gestor' && password === 'senha123') {
       this.loggedInUser = { username: username, role: 'gestor' };
-      this.router.navigate(['/pagina-principal']); // Substitua 'pagina-principal' pela rota da sua página principal
-      return true; // Credenciais válidas
+      this.router.navigate(['/projetos']); 
+      return true; 
     } else if (username === 'dev1' && password === 'devsenha') {
       this.loggedInUser = { username: username, role: 'desenvolvedor' };
-      return true; // Credenciais válidas
+      this.router.navigate(['/projetos']);
+      return true; 
     }
 
-    return false; // Credenciais inválidas
+    return false; 
   }
 
   getLoggedInUser(): any {
