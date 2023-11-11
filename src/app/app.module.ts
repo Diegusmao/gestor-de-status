@@ -28,7 +28,8 @@ import { BarraPesquisaComponent } from './barra-pesquisa/barra-pesquisa.componen
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

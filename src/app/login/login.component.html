@@ -4,16 +4,22 @@
       <div class="card">
         <div class="card-body">
           <h2 class="mb-4 text-center">Login</h2>
-          <form (ngSubmit)="login()">
+          <form (ngSubmit)="login()" #loginForm="ngForm">
             <div class="mb-3">
               <label for="username" class="form-label">Nome de Usuário:</label>
               <input type="text" id="username" name="username" [(ngModel)]="username" class="form-control" required>
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Senha:</label>
-              <input type="password" id="password" name="password" [(ngModel)]="password" class="form-control" required>
+              <input type="password" id="password" name="password" [(ngModel)]="password" 
+                     class="form-control" required
+                     pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}"
+              >
             </div>
-            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!loginForm.form.valid">Entrar</button>
+            <div *ngIf="!loginForm.form.valid" class="text-danger mt-3">
+              A senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e ter no mínimo 6 caracteres.
+            </div>
           </form>
           <div *ngIf="errorMessage" class="text-danger mt-3">{{ errorMessage }}</div>
         </div>

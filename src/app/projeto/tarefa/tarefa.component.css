@@ -7,7 +7,7 @@
   box-shadow: 2px 3px 3px 2px gray;
   cursor: pointer;
   padding: 10px;
-  margin-bottom: 20px; /* Adicione um espaçamento inferior ao contêiner de entrada */
+  margin-bottom: 20px;
 }
 
 .input_container h3 {

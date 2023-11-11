@@ -1,3 +1,5 @@
+<!-- projeto.component.html -->
+
 <div class="input_container">
   <h3>Criar Projeto</h3>
   <input #projetoInput type="text" placeholder="Nome do Projeto" [(ngModel)]="nomeProjeto" />
@@ -5,20 +7,28 @@
 </div>
 
 <div class="container">
-  <div *ngFor="let projeto of listaProjetos" class="card">
-    <h4>{{ projeto.nome }}</h4>
+  <div *ngFor="let projeto of listaProjetos" class="card" >
+    <h1> {{ projeto.nome }}   </h1> 
+    <i (click)="removerProjeto(projeto)" class="material-icons">delete</i>
     <input type="text" placeholder="Adicionar Tarefa" [(ngModel)]="projeto.nomeTarefa" />
     <button (click)="adicionarTarefa(projeto)">Adicionar Tarefa</button>
-
+    
+  
     <ul>
-      <li *ngFor="let tarefa of projeto.tarefas">
-        <a [routerLink]="['/projeto', projeto.id, 'tarefa', tarefa.id]">
-          <label class="task-label">
-            {{ tarefa.nome }} <br> Concluída: {{ tarefa.concluida ? 'Sim' : 'Não' }}
-          </label>
-        </a>
-        <input type="checkbox" [(ngModel)]="tarefa.concluida" class="checkbox" />
+      <li *ngFor="let tarefa of projeto.tarefas" [ngClass]="{'concluida': tarefa.concluida}">
+        <div class="task-container">
+          
+          <input type="checkbox" [(ngModel)]="tarefa.concluida" class="checkbox" />
+          <a [routerLink]="['/projeto', projeto.id, 'tarefa', tarefa.id]">
+            <label class="task-label">
+              {{ tarefa.nome }}
+            </label>
+          </a>
+          <i (click)="removerTarefa(projeto, tarefa)" class="material-icons">delete</i>
+        </div>
       </li>
     </ul>
+
+   
   </div>
 </div>
