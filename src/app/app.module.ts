@@ -1,3 +1,4 @@
+// app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,4 +33,5 @@ import { BarraPesquisaComponent } from './barra-pesquisa/barra-pesquisa.componen
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

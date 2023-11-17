@@ -1,0 +1,131 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Nome do Usuário 1",
+      "email": "usuario1@example.com",
+      "perfil": "GESTOR"
+    },
+    {
+      "id": 2,
+      "nome": "Nome do Usuário 2",
+      "email": "usuario2@example.com",
+      "perfil": "DESENVOLVEDOR"
+    },
+    {
+      "id": 3,
+      "nome": "Diego Gusmão",
+      "email": "diego@example.com",
+      "perfil": "GESTOR"
+    },
+    {
+      "id": 4,
+      "nome": "joao",
+      "email": "joao@example.com",
+      "perfil": "GESTDESENVOLVEDOR"
+    }
+  ],
+  "projetos": [
+    {
+      "id": 1,
+      "nome": "Projeto 1",
+      "nomeTarefa": "Tarefa do Projeto 1",
+      "tarefas": [
+        {
+          "id": 1,
+          "nome": "Tarefa 1",
+          "descricao": "Descrição da Tarefa 1",
+          "projetoId": 1,
+          "concluida": false,
+          "peso": 2,
+          "atividades": [
+            {
+              "id": 1,
+              "descricao": "Atividade 1.1",
+              "concluida": false
+            },
+            {
+              "id": 2,
+              "descricao": "Atividade 1.2",
+              "concluida": true
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "nome": "Tarefa 2",
+          "descricao": "Descrição da Tarefa 2",
+          "projetoId": 1,
+          "concluida": true,
+          "peso": 3,
+          "atividades": [
+            {
+              "id": 3,
+              "descricao": "Atividade 2.1",
+              "concluida": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "Projeto 2",
+      "nomeTarefa": "Tarefa do Projeto 2",
+      "tarefas": [
+        {
+          "id": 3,
+          "nome": "Tarefa 3",
+          "descricao": "Descrição da Tarefa 3",
+          "projetoId": 2,
+          "concluida": true,
+          "peso": 1,
+          "atividades": [
+            {
+              "id": 4,
+              "descricao": "Atividade 3.1",
+              "concluida": true
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "nome": "Tarefa 4",
+          "descricao": "Descrição da Tarefa 4",
+          "projetoId": 2,
+          "concluida": false,
+          "peso": 2,
+          "atividades": [
+            {
+              "id": 5,
+              "descricao": "Atividade 4.1",
+              "concluida": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "nome": "testpostman",
+      "nomeTarefa": "Tarefa do Projeto 50",
+      "tarefas": [
+        {
+          "id": 100,
+          "nome": "testepostman",
+          "descricao": "Descrição da Tarefa 1",
+          "projetoId": 50,
+          "concluida": false,
+          "peso": 2,
+          "atividades": [
+            {
+              "id": 200,
+              "descricao": "Atividade 200",
+              "concluida": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

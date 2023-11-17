@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Projeto } from 'src/app/models/projeto.model';
 import { Tarefa } from 'src/app/models/tarefa.model';
@@ -14,72 +13,126 @@ export class ProjetoTarefaService {
     this.projetos = this.obterProjetosLocalStorage();
   }
 
-  adicionarProjeto(projeto: Projeto): void {
-    this.projetos.push(projeto);
-    this.atualizarLocalStorage();
+  async adicionarProjeto(projeto: Projeto): Promise<void> {
+    try {
+      const adicaoProjetoPromise = Promise.resolve().then(() => {
+        this.projetos.push(projeto);
+      });
+
+      await Promise.race([adicaoProjetoPromise]);
+      
+      if (this.projetos.indexOf(projeto) === -1) {
+        throw new Error('Estamos com problemas, mas em breve seu projeto será criado.');
+      }
+
+      await this.atualizarLocalStorage();
+    } catch (error) {
+      console.error('Erro ao adicionar projeto:', error);
+      throw error;
+    }
   }
 
-  adicionarTarefa(projeto: Projeto, nomeTarefa: string): void {
-    const novaTarefa = {
-      id: projeto.tarefas.length + 1,
-      nome: nomeTarefa,
-      descricao: 'Descrição da Tarefa',
-      projetoId: projeto.id,
-      concluida: false,
-      peso: 1,
-      atividades: []
-    };
+  async adicionarTarefa(projeto: Projeto, nomeTarefa: string): Promise<void> {
+    try {
+      const novaTarefa = {
+        id: projeto.tarefas.length + 1,
+        nome: nomeTarefa,
+        descricao: 'Descrição da Tarefa',
+        projetoId: projeto.id,
+        concluida: false,
+        peso: 1,
+        atividades: []
+      };
 
-    projeto.tarefas.push(novaTarefa);
-    this.atualizarProjeto(projeto);
+      projeto.tarefas.push(novaTarefa);
+      await this.atualizarProjeto(projeto);
+    } catch (error) {
+      console.error('Erro ao adicionar tarefa:', error);
+      throw error;
+    }
   }
 
   obterProjetos(): Projeto[] {
     return this.projetos;
   }
 
-  obterProjetoPorId(projetoId: number): Projeto | undefined {
-    return this.projetos.find(projeto => projeto.id === projetoId);
-  }
-
-  atualizarProjeto(projeto: Projeto): void {
-    const index = this.projetos.findIndex(p => p.id === projeto.id);
-    if (index !== -1) {
-      this.projetos[index] = projeto;
-      this.atualizarLocalStorage();
+  async obterProjetoPorId(projetoId: number): Promise<Projeto | undefined> {
+    try {
+      return this.projetos.find(projeto => projeto.id === projetoId);
+    } catch (error) {
+      console.error('Erro ao obter projeto por ID:', error);
+      throw error;
     }
   }
 
-  removerProjeto(projeto: Projeto): void {
-    const index = this.projetos.indexOf(projeto);
-    if (index !== -1) {
-      this.projetos.splice(index, 1);
-      this.atualizarLocalStorage();
+  async atualizarProjeto(projeto: Projeto): Promise<void> {
+    try {
+      const index = this.projetos.findIndex(p => p.id === projeto.id);
+      if (index !== -1) {
+        this.projetos[index] = projeto;
+        await this.atualizarLocalStorage();
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar projeto:', error);
+      throw error;
     }
   }
 
-  obterTarefaPorId(projetoId: number, tarefaId: number): Tarefa | undefined {
-    const projeto = this.obterProjetoPorId(projetoId);
-    if (projeto) {
-      return projeto.tarefas.find(tarefa => tarefa.id === tarefaId);
+  async removerProjeto(projeto: Projeto): Promise<void> {
+    try {
+      const index = this.projetos.indexOf(projeto);
+      if (index !== -1) {
+        this.projetos.splice(index, 1);
+        await this.atualizarLocalStorage();
+      }
+    } catch (error) {
+      console.error('Erro ao remover projeto:', error);
+      throw error;
     }
-    return undefined;
   }
 
-  removerTarefa(projeto: Projeto, tarefa: Tarefa): void {
-    const index = projeto.tarefas.indexOf(tarefa);
-    if (index !== -1) {
-      projeto.tarefas.splice(index, 1);
-      this.atualizarProjeto(projeto);
+  async obterTarefaPorId(projetoId: number, tarefaId: number): Promise<Tarefa | undefined> {
+    try {
+      const projeto = await this.obterProjetoPorId(projetoId);
+      if (projeto) {
+        return projeto.tarefas.find(tarefa => tarefa.id === tarefaId);
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Erro ao obter tarefa por ID:', error);
+      throw error;
+    }
+  }
+
+  async removerTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      const index = projeto.tarefas.indexOf(tarefa);
+      if (index !== -1) {
+        projeto.tarefas.splice(index, 1);
+        await this.atualizarProjeto(projeto);
+      }
+    } catch (error) {
+      console.error('Erro ao remover tarefa:', error);
+      throw error;
     }
   }
 
   private obterProjetosLocalStorage(): Projeto[] {
-    const projetos = localStorage.getItem(this.PROJETOS_KEY);
-    return projetos ? JSON.parse(projetos) : [];
+    try {
+      const projetos = localStorage.getItem(this.PROJETOS_KEY);
+      return projetos ? JSON.parse(projetos) : [];
+    } catch (error) {
+      console.error('Erro ao obter projetos do armazenamento local:', error);
+      throw error;
+    }
   }
 
-  private atualizarLocalStorage(): void {
-    localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));
+  private async atualizarLocalStorage(): Promise<void> {
+    try {
+      localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));
+    } catch (error) {
+      console.error('Erro ao atualizar armazenamento local:', error);
+      throw error;
+    }
   }
 }
