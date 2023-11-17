@@ -23,17 +23,23 @@ export class TarefaComponent implements OnInit {
     private location: Location
   ) {}
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.projetoId = +params['idProjeto'];
-      this.tarefaId = +params['idTarefa'];
+  async ngOnInit(): Promise<void> {
+    try {
+      const params = await new Promise<{ idProjeto: string, idTarefa: string } | any>(resolve => {
+        this.route.params.subscribe(params => resolve(params));
+      });
 
-      this.projeto = this.projetoTarefaService.obterProjetoPorId(this.projetoId) || {} as Projeto;
+      this.projetoId = +params.idProjeto;
+      this.tarefaId = +params.idTarefa;
+
+      this.projeto = await this.projetoTarefaService.obterProjetoPorId(this.projetoId) || {} as Projeto;
 
       if (this.projeto.id) {
-        this.tarefa = this.projetoTarefaService.obterTarefaPorId(this.projetoId, this.tarefaId) || {} as Tarefa;
+        this.tarefa = await this.projetoTarefaService.obterTarefaPorId(this.projetoId, this.tarefaId) || {} as Tarefa;
       }
-    });
+    } catch (error: any) {
+      console.error('Erro ao inicializar tarefa:', error.message);
+    }
   }
 
   voltar(): void {

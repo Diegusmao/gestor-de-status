@@ -1,4 +1,4 @@
-
+// projeto.component.ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProjetoTarefaService } from 'src/app/projeto/tarefa/projeto-tarefa.service';
 import { Projeto } from 'src/app/models/projeto.model';
@@ -22,42 +22,62 @@ export class ProjetoComponent implements OnInit {
     this.carregarProjetos();
   }
 
-  carregarProjetos(): void {
-    this.listaProjetos = this.projetoTarefaService.obterProjetos();
+  async carregarProjetos(): Promise<void> {
+    try {
+      this.listaProjetos = await this.projetoTarefaService.obterProjetos();
+    } catch (error: any) {
+      console.error('Erro ao carregar projetos:', error.message);
+    }
   }
 
-  adicionarProjeto(): void {
+  async adicionarProjeto(): Promise<void> {
     if (!this.nomeProjeto.trim()) {
       return;
     }
 
-    const novoProjeto: Projeto = {
-      id: this.listaProjetos.length + 1,
-      nome: this.nomeProjeto,
-      nomeTarefa: '',
-      tarefas: []
-    };
+    try {
+      const novoProjeto: Projeto = {
+        id: this.listaProjetos.length + 1,
+        nome: this.nomeProjeto,
+        nomeTarefa: '',
+        tarefas: []
+      };
 
-    this.projetoTarefaService.adicionarProjeto(novoProjeto);
-    this.nomeProjeto = '';
-    this.setFocusNoInput();
+      await this.projetoTarefaService.adicionarProjeto(novoProjeto);
+      this.nomeProjeto = '';
+      this.setFocusNoInput();
+    } catch (error: any) {
+      console.error('Erro ao adicionar projeto:', error.message);
+    }
   }
 
-  adicionarTarefa(projeto: Projeto): void {
+  async adicionarTarefa(projeto: Projeto): Promise<void> {
     if (!projeto.nomeTarefa.trim()) {
       return;
     }
 
-    this.projetoTarefaService.adicionarTarefa(projeto, projeto.nomeTarefa);
-    projeto.nomeTarefa = '';
+    try {
+      await this.projetoTarefaService.adicionarTarefa(projeto, projeto.nomeTarefa);
+      projeto.nomeTarefa = '';
+    } catch (error: any) {
+      console.error('Erro ao adicionar tarefa:', error.message);
+    }
   }
 
-  removerProjeto(projeto: Projeto): void {
-    this.projetoTarefaService.removerProjeto(projeto);
+  async removerProjeto(projeto: Projeto): Promise<void> {
+    try {
+      await this.projetoTarefaService.removerProjeto(projeto);
+    } catch (error: any) {
+      console.error('Erro ao remover projeto:', error.message);
+    }
   }
 
-  removerTarefa(projeto: Projeto, tarefa: Tarefa): void {
-    this.projetoTarefaService.removerTarefa(projeto, tarefa);
+  async removerTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      await this.projetoTarefaService.removerTarefa(projeto, tarefa);
+    } catch (error: any) {
+      console.error('Erro ao remover tarefa:', error.message);
+    }
   }
 
   setFocusNoInput(): void {
