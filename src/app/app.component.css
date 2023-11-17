@@ -4,9 +4,11 @@ h1{
     text-align: center;
     padding-top: 20px;
     font-family: 'Poppins', sans-serif;
+    font-size: 20;
 }
 .head_container{
     background-color: var(--light-gray); 
     height: 170px;
     color: white;
+    margin-bottom: 30px;
 }

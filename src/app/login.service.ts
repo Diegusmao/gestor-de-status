@@ -11,12 +11,12 @@ export class loginService {
 
   authenticate(username: string, password: string): boolean {
 
-    if (username === 'gestor' && password === 'senha123') {
+    if (username === 'gestor' && password === 'Gestor123') {
       this.loggedInUser = { username: username, role: 'gestor' };
       this.router.navigate(['/projetos']); 
       return true; 
     } else if (username === 'dev1' && password === 'devsenha') {
-      this.loggedInUser = { username: username, role: 'desenvolvedor' };
+      this.loggedInUser = { username: username, role: 'Dev123' };
       this.router.navigate(['/projetos']);
       return true; 
     }

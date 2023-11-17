@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Projeto } from 'src/app/models/projeto.model';
@@ -10,7 +10,7 @@ import { ProjetoTarefaService } from './projeto-tarefa.service';
   templateUrl: './tarefa.component.html',
   styleUrls: ['./tarefa.component.css']
 })
-export class TarefaComponent {
+export class TarefaComponent implements OnInit {
   @ViewChild('tarefaNome') tarefaNome: any;
   projeto: Projeto = {} as Projeto;
   tarefa: Tarefa = {} as Tarefa;
