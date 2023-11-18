@@ -1,19 +1,17 @@
-// api-service.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000'; 
+  private apiUrl = 'http://localhost:3000';  
+
+  constructor(private httpClient: HttpClient) {}
 
   async get(endpoint: string): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/${endpoint}`);
-      if (!response.ok) {
-        throw new Error(`Erro na requisição GET: ${response.statusText}`);
-      }
-      return response.json();
+      return this.httpClient.get(`${this.apiUrl}/${endpoint}`).toPromise();
     } catch (error: any) {
       throw new Error(`Erro na requisição GET: ${error.message}`);
     }
@@ -21,17 +19,7 @@ export class ApiService {
 
   async post(endpoint: string, data: any): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error(`Erro na requisição POST: ${response.statusText}`);
-      }
-      return response.json();
+      return this.httpClient.post(`${this.apiUrl}/${endpoint}`, data).toPromise();
     } catch (error: any) {
       throw new Error(`Erro na requisição POST: ${error.message}`);
     }
@@ -39,17 +27,7 @@ export class ApiService {
 
   async put(endpoint: string, data: any): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/${endpoint}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error(`Erro na requisição PUT: ${response.statusText}`);
-      }
-      return response.json();
+      return this.httpClient.put(`${this.apiUrl}/${endpoint}`, data).toPromise();
     } catch (error: any) {
       throw new Error(`Erro na requisição PUT: ${error.message}`);
     }
@@ -57,13 +35,7 @@ export class ApiService {
 
   async delete(endpoint: string): Promise<any> {
     try {
-      const response = await fetch(`${this.apiUrl}/${endpoint}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error(`Erro na requisição DELETE: ${response.statusText}`);
-      }
-      return response.json();
+      return this.httpClient.delete(`${this.apiUrl}/${endpoint}`).toPromise();
     } catch (error: any) {
       throw new Error(`Erro na requisição DELETE: ${error.message}`);
     }

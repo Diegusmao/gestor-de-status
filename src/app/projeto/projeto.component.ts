@@ -16,7 +16,11 @@ export class ProjetoComponent implements OnInit {
 
   @ViewChild('projetoInput', { static: false }) projetoInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private projetoTarefaService: ProjetoTarefaService) {}
+  constructor(private projetoTarefaService: ProjetoTarefaService) {
+    this.projetoTarefaService.projetosObservable.subscribe(projetos => {
+      this.listaProjetos = projetos;
+    });
+  }
 
   ngOnInit(): void {
     this.carregarProjetos();
@@ -40,7 +44,11 @@ export class ProjetoComponent implements OnInit {
         id: this.listaProjetos.length + 1,
         nome: this.nomeProjeto,
         nomeTarefa: '',
-        tarefas: []
+        dataInicio: new Date(),
+        horaInicio: this.formatarHora(new Date()), 
+        tarefas: [],
+        mostrarTarefas: false,
+        percentualConclusao: 0,
       };
 
       await this.projetoTarefaService.adicionarProjeto(novoProjeto);
@@ -52,16 +60,20 @@ export class ProjetoComponent implements OnInit {
   }
 
   async adicionarTarefa(projeto: Projeto): Promise<void> {
-    if (!projeto.nomeTarefa.trim()) {
-      return;
-    }
+    if (projeto.nomeTarefa.trim()) {
+      
 
-    try {
-      await this.projetoTarefaService.adicionarTarefa(projeto, projeto.nomeTarefa);
-      projeto.nomeTarefa = '';
-    } catch (error: any) {
-      console.error('Erro ao adicionar tarefa:', error.message);
+      try {
+        await this.projetoTarefaService.adicionarTarefa(projeto, projeto.nomeTarefa);
+        projeto.nomeTarefa = '';
+      } catch (error: any) {
+        console.error('Erro ao adicionar tarefa:', error.message);
+      }
     }
+  }
+
+  toggleTarefas(projeto: Projeto): void {
+    projeto.mostrarTarefas = !projeto.mostrarTarefas;
   }
 
   async removerProjeto(projeto: Projeto): Promise<void> {
@@ -83,4 +95,19 @@ export class ProjetoComponent implements OnInit {
   setFocusNoInput(): void {
     this.projetoInput.nativeElement.focus();
   }
+
+  private formatarHora(data: Date): string {
+    const horas = ('0' + data.getHours()).slice(-2);
+    const minutos = ('0' + data.getMinutes()).slice(-2);
+    return `${horas}:${minutos}`;
+  }
+
+  async marcarTarefaConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      await this.projetoTarefaService.marcarTarefaComoConcluida(projeto, tarefa);
+    } catch (error: any) {
+      console.error('Erro ao marcar tarefa como concluída:', error.message);
+    }
+  }
+  
 }

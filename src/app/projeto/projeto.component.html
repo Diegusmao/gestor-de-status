@@ -7,17 +7,18 @@
 </div>
 
 <div class="container">
-  <div *ngFor="let projeto of listaProjetos" class="card" >
-    <h1> {{ projeto.nome }}   </h1> 
-    <i (click)="removerProjeto(projeto)" class="material-icons">delete</i>
-    <input type="text" placeholder="Adicionar Tarefa" [(ngModel)]="projeto.nomeTarefa" />
-    <button (click)="adicionarTarefa(projeto)">Adicionar Tarefa</button>
+  <div *ngFor="let projeto of listaProjetos" class="card">
+    <h1 class="project-name" (click)="toggleTarefas(projeto)">{{ projeto.nome }} </h1>
     
-  
-    <ul>
+    <i (click)="removerProjeto(projeto)" class="material-icons">delete</i>
+    <p><br>Data de Início: {{ projeto.dataInicio | date:'dd/MMM/yyyy' }}</p>
+    <p>Hora de Início: {{ projeto.horaInicio }}</p>
+    <input *ngIf="projeto.mostrarTarefas" type="text" placeholder="Adicionar Tarefa" [(ngModel)]="projeto.nomeTarefa" />
+    <button *ngIf="projeto.mostrarTarefas" (click)="adicionarTarefa(projeto)">Adicionar Tarefa</button>
+    
+    <ul *ngIf="projeto.mostrarTarefas">
       <li *ngFor="let tarefa of projeto.tarefas" [ngClass]="{'concluida': tarefa.concluida}">
         <div class="task-container">
-          
           <input type="checkbox" [(ngModel)]="tarefa.concluida" class="checkbox" />
           <a [routerLink]="['/projeto', projeto.id, 'tarefa', tarefa.id]">
             <label class="task-label">
@@ -28,7 +29,6 @@
         </div>
       </li>
     </ul>
-
-   
+    <p>Percentual de conclusão do projeto: {{ projeto.percentualConclusao }}%</p>
   </div>
 </div>
