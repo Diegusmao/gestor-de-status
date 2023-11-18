@@ -11,6 +11,7 @@ import { AtividadeComponent } from './atividade/atividade.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { BarraPesquisaComponent } from './barra-pesquisa/barra-pesquisa.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { BarraPesquisaComponent } from './barra-pesquisa/barra-pesquisa.componen
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [
   ],

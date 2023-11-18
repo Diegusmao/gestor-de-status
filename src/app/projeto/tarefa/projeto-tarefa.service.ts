@@ -1,35 +1,73 @@
 import { Injectable } from '@angular/core';
 import { Projeto } from 'src/app/models/projeto.model';
 import { Tarefa } from 'src/app/models/tarefa.model';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjetoTarefaService {
-  private projetos: Projeto[] = [];
   private readonly PROJETOS_KEY = 'projetos';
+  private projetosSubject: BehaviorSubject<Projeto[]> = new BehaviorSubject<Projeto[]>([]);
+  projetosObservable: Observable<Projeto[]> = this.projetosSubject.asObservable();
+  private percentualConclusaoSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  percentualConclusaoObservable: Observable<number> = this.percentualConclusaoSubject.asObservable();
 
   constructor() {
     this.projetos = this.obterProjetosLocalStorage();
+    this.atualizarPercentualConclusao();
+  }
+
+  private inicializarTarefas(projeto: Projeto): void {
+    projeto.tarefas.forEach(tarefa => {
+      if (tarefa.concluida === undefined) {
+        tarefa.concluida = false;
+      }
+    });
+  }
+
+  private set projetos(value: Projeto[]) {
+    this.projetosSubject.next(value);
+    this.atualizarPercentualConclusao();
+    this.salvarProjetosNoLocalStorage();
+  }
+
+  get projetos(): Projeto[] {
+    return this.projetosSubject.getValue();
+  }
+
+  private atualizarPercentualConclusao() {
+    const projetos = this.projetos;
+    const totalTarefas = projetos.reduce((acc, projeto) => acc + projeto.tarefas.length, 0);
+    const tarefasConcluidas = projetos.reduce(
+      (acc, projeto) =>
+        acc + projeto.tarefas.filter((tarefa) => tarefa.concluida).length,
+      0
+    );
+    const percentualConclusao = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
+    this.percentualConclusaoSubject.next(percentualConclusao);
   }
 
   async adicionarProjeto(projeto: Projeto): Promise<void> {
     try {
-      const adicaoProjetoPromise = Promise.resolve().then(() => {
-        this.projetos.push(projeto);
-      });
-
-      await Promise.race([adicaoProjetoPromise]);
-      
-      if (this.projetos.indexOf(projeto) === -1) {
-        throw new Error('Estamos com problemas, mas em breve seu projeto será criado.');
-      }
-
-      await this.atualizarLocalStorage();
+      projeto.dataInicio = new Date();
+      projeto.horaInicio = this.formatarHora(projeto.dataInicio);
+      projeto.mostrarTarefas = false;
+      projeto.percentualConclusao = 0;
+      this.inicializarTarefas(projeto);
+      this.projetos.push(projeto);
     } catch (error) {
       console.error('Erro ao adicionar projeto:', error);
       throw error;
+    } finally {
+      this.atualizarPercentualConclusao();
     }
+  }
+
+  private formatarHora(data: Date): string {
+    const horas = ('0' + data.getHours()).slice(-2);
+    const minutos = ('0' + data.getMinutes()).slice(-2);
+    return `${horas}:${minutos}`;
   }
 
   async adicionarTarefa(projeto: Projeto, nomeTarefa: string): Promise<void> {
@@ -52,8 +90,8 @@ export class ProjetoTarefaService {
     }
   }
 
-  obterProjetos(): Projeto[] {
-    return this.projetos;
+  obterProjetos(): Promise<Projeto[]> {
+    return Promise.resolve(this.projetos);
   }
 
   async obterProjetoPorId(projetoId: number): Promise<Projeto | undefined> {
@@ -70,7 +108,7 @@ export class ProjetoTarefaService {
       const index = this.projetos.findIndex(p => p.id === projeto.id);
       if (index !== -1) {
         this.projetos[index] = projeto;
-        await this.atualizarLocalStorage();
+        this.salvarProjetosNoLocalStorage();
       }
     } catch (error) {
       console.error('Erro ao atualizar projeto:', error);
@@ -83,7 +121,7 @@ export class ProjetoTarefaService {
       const index = this.projetos.indexOf(projeto);
       if (index !== -1) {
         this.projetos.splice(index, 1);
-        await this.atualizarLocalStorage();
+        this.salvarProjetosNoLocalStorage();
       }
     } catch (error) {
       console.error('Erro ao remover projeto:', error);
@@ -124,6 +162,21 @@ export class ProjetoTarefaService {
     } catch (error) {
       console.error('Erro ao obter projetos do armazenamento local:', error);
       throw error;
+    }
+  }
+
+  private salvarProjetosNoLocalStorage(): void {
+    localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));
+  }
+
+  async marcarTarefaComoConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      tarefa.concluida = true;
+    } catch (error) {
+      console.error('Erro ao marcar tarefa como concluída:', error);
+      throw error;
+    } finally {
+      this.atualizarPercentualConclusao();
     }
   }
 
