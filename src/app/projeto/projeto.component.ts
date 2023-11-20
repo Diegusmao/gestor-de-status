@@ -103,11 +103,17 @@ export class ProjetoComponent implements OnInit {
   }
 
   async marcarTarefaConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
-    try {
+    tarefa.concluida = !tarefa.concluida;
+    await this.projetoTarefaService.atualizarTarefa(projeto, tarefa);
+  }
+
+  async marcarDesmarcarTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    if (tarefa.concluida) {
+      await this.projetoTarefaService.desmarcarTarefaComoConcluida(projeto, tarefa);
+    } else {
       await this.projetoTarefaService.marcarTarefaComoConcluida(projeto, tarefa);
-    } catch (error: any) {
-      console.error('Erro ao marcar tarefa como concluída:', error.message);
     }
   }
+
   
 }
