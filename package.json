@@ -4,11 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href=/gestor-de-status",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "json.server": "json-server --watch db.json",
-    "json:server:routes": "json-server --watch db.json --routes routes.json"
+    "json:server:routes": "json-server --watch db.json --routes routes.json",
+    "ghpages": "angular-cli-ghpages --dir=dist/gestor-de-status"
   },
   "private": true,
   "dependencies": {
