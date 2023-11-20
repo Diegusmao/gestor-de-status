@@ -46,8 +46,18 @@ export class ProjetoTarefaService {
     );
     const percentualConclusao = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
     this.percentualConclusaoSubject.next(percentualConclusao);
+    this.salvarProjetosNoLocalStorage();
   }
 
+  private calcularPercentualConclusaoProjeto(projeto: Projeto): void {
+    const totalTarefas = projeto.tarefas.length;
+    const tarefasConcluidas = projeto.tarefas.filter(tarefa => tarefa.concluida).length;
+    const percentualConclusao = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
+    projeto.percentualConclusao = percentualConclusao;
+    this.atualizarPercentualConclusao(); 
+  }
+
+  
   async adicionarProjeto(projeto: Projeto): Promise<void> {
     try {
       projeto.dataInicio = new Date();
@@ -84,6 +94,7 @@ export class ProjetoTarefaService {
 
       projeto.tarefas.push(novaTarefa);
       await this.atualizarProjeto(projeto);
+      this.calcularPercentualConclusaoProjeto(projeto);
     } catch (error) {
       console.error('Erro ao adicionar tarefa:', error);
       throw error;
@@ -148,6 +159,7 @@ export class ProjetoTarefaService {
       if (index !== -1) {
         projeto.tarefas.splice(index, 1);
         await this.atualizarProjeto(projeto);
+        
       }
     } catch (error) {
       console.error('Erro ao remover tarefa:', error);
@@ -172,14 +184,46 @@ export class ProjetoTarefaService {
   async marcarTarefaComoConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
     try {
       tarefa.concluida = true;
+      await this.atualizarTarefa(projeto, tarefa);
+      this.calcularPercentualConclusaoProjeto(projeto);
     } catch (error) {
       console.error('Erro ao marcar tarefa como concluída:', error);
+      throw error;
+    }
+  }
+  
+  async desmarcarTarefaComoConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      tarefa.concluida = false;
+      await this.atualizarTarefa(projeto, tarefa);
+      this.calcularPercentualConclusaoProjeto(projeto);
+    } catch (error) {
+      console.error('Erro ao desmarcar tarefa como concluída:', error);
+      throw error;
+    }
+  }
+
+  
+
+  async atualizarTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+    try {
+      const projetoIndex = this.projetos.findIndex(p => p.id === projeto.id);
+      if (projetoIndex !== -1) {
+        const tarefaIndex = this.projetos[projetoIndex].tarefas.findIndex(t => t.id === tarefa.id);
+        if (tarefaIndex !== -1) {
+          this.projetos[projetoIndex].tarefas[tarefaIndex] = tarefa;
+          await this.atualizarLocalStorage();
+          this.atualizarPercentualConclusao();
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar tarefa:', error);
       throw error;
     } finally {
       this.atualizarPercentualConclusao();
     }
   }
-
+  
   private async atualizarLocalStorage(): Promise<void> {
     try {
       localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));

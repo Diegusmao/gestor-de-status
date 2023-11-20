@@ -10,6 +10,32 @@
   margin-bottom: 20px;
 }
 
+
+.progress-bar-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: rgb(33, 153, 107);
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-weight: bold;
+}
+
+
+
 .card {
   background-color: #fff;
   border-radius: 10px;
@@ -74,11 +100,19 @@ button:hover {
   transition: 0.5s;
 }
 
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .project-name {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
+  margin: 0;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: #581004;
 }
 
 .card ul {
