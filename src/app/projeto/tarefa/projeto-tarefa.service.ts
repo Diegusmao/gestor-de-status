@@ -27,14 +27,12 @@ export class ProjetoTarefaService {
 
   constructor() {
     this.init();
-    // this.atualizarPercentualConclusao();
   }
 
   private async init() {
     try {
       const projetosDB = await this.obterProjetosDB();
       this.projetos = projetosDB || [];
-      // this.atualizarPercentualConclusao();
     } catch (error) {
       console.error('Erro ao inicializar:', error);
     }
@@ -50,7 +48,6 @@ export class ProjetoTarefaService {
 
   private set projetos(value: Projeto[]) {
     this.projetosSubject.next(value ? value : []);
-    // this.atualizarPercentualConclusao();
     this.salvarProjetosNoLocalStorage();
   }
 
@@ -61,19 +58,15 @@ export class ProjetoTarefaService {
   private async refreshProjetos(id: number | null = null): Promise<void> {
     if (id) {
       const projetoById = await this.obterProjetoByIdDB(id);
-
-      // Verificar se o projeto com o ID já existe na lista
       const projetoExistente = this.projetos.find(
         (projeto) => projeto.id === id
       );
 
       if (projetoExistente) {
-        // Atualizar a lista substituindo o projeto existente pelo projetoById
         this.projetos = this.projetos.map((projeto) =>
           projeto.id === id ? projetoById : projeto
         );
       } else {
-        // Adicionar o projetoById à lista
         this.projetos = [...this.projetos, projetoById];
       }
     } else {
@@ -123,15 +116,12 @@ export class ProjetoTarefaService {
     try {
       this.inicializarTarefas(projeto);
 
-      // this.projetos.push(projeto);
       const response: Projeto = await this.adicionarProjetoDB(projeto);
 
       await this.refreshProjetos(response.id);
     } catch (error) {
       console.error('Erro ao adicionar projeto:', error);
       throw error;
-    } finally {
-      // this.atualizarPercentualConclusao();
     }
   }
 
@@ -422,8 +412,6 @@ export class ProjetoTarefaService {
     } catch (error) {
       console.error('Erro ao atualizar projeto:', error);
       throw error;
-    } finally {
-      // this.atualizarPercentualConclusao();
     }
   }
 

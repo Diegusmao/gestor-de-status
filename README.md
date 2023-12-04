@@ -16,12 +16,12 @@ Aplicação para gestão e acompanhamento de status de tarefas e percentual de c
 - [x] Desenvolver o layout da aplicação com componentes, tornando o cabeçalho e o rodapé componentes reutilizáveis.
 - [x] Aplicar pelo menos dois tipos de data-binding, como Interpolation, Property Binding, Event Binding, Two-Way Data Binding,
 - [x] Empregar variáveis de template e a anotação ViewChild para interagir com elementos do DOM ou componentes diretamente no template ou no código TypeScript do aplicativo.
-- [x] Estabelecer a passagem de dados entre componentes por meio da hierarquia de componentes, empregando as anotações @Input e @Output.
+- [ ] Estabelecer a passagem de dados entre componentes por meio da hierarquia de componentes, empregando as anotações @Input e @Output.
 - [x] Transferir dados, por meio de serviços, entre componentes que não estão diretamente relacionados.
 - [x] Mapear os componentes às rotas no módulo de rotas, criando uma estrutura de navegação eficiente.
 - [x] Permitir a navegação fluida entre as diferentes páginas do aplicativo por meio de links e botões de navegação.
 - [x] Validar os campos do formulário com expressões regulares (REGEX) e apresentar as mensagens de erro.
-- [x] Implementar máscaras em campos de formulário, quando necessário, para melhorar a experiência do usuário ao inserir dados.
+- [N/A] Implementar máscaras em campos de formulário, quando necessário, para melhorar a experiência do usuário ao inserir dados.
 - [x] Desabilitar o botão de envio (submit) enquanto o formulário estiver em um estado inválido.
 - [x] Realizar requisições à API com tratamento adequado das respostas de sucesso e erro com Promises.
 - [x] Realizar requisições à API com tratamento adequado das respostas de sucesso e erro com Observables.
@@ -35,7 +35,7 @@ Aplicação para gestão e acompanhamento de status de tarefas e percentual de c
 ## Manual de execução
 
 - Clonar o repositório com `git clone`
-- Fazer checkout no branch `develop` que contém as modificações mais recentes
+- Fazer checkout no branch `master` que contém as modificações mais recentes
 - Abrir o projeto no editor Visual Studio Code (VS Code)
 - Abrir um terminal pelo VSCode ou qualquer terminal do seu Sistema Operacional apontando para o diretório raiz do projeto
 - Instalar as dependências contidas no `package.json`
@@ -49,4 +49,6 @@ Aplicação para gestão e acompanhamento de status de tarefas e percentual de c
 - O comando para execução do JSON Server deve ser aplicado no diretório raiz do projeto, ou seja, que contém o arquivo `db.json` e `routes.json`.
   - Por padrão, a aplicação JSON Server executa no endereço `localhost:3000`
 - Abrir um novo terminal pelo VSCode e então executar o projeto Angular
-  - Comando: `ng s -o`
+  - Comando: `npm run start`
+  - Ou via Execução explícita: `ng serve`
+  - A página irá ser executada no endereço: `http://localhost:4200`
