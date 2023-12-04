@@ -1,0 +1,137 @@
+.input_container {
+  background-color: white;
+  width: 400px;
+  margin: auto;
+  margin-top: 0px;
+  border-radius: 5px;
+  box-shadow: 2px 3px 3px 2px gray;
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.input_container h3 {
+  margin-left: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+input {
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-bottom: 20px;
+  width: 280px;
+  height: 35px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  margin-right: 5px;
+  outline: 0;
+  padding: 5px;
+}
+
+button i {
+  margin-right: 5px;
+}
+
+button {
+  height: 36px;
+  width: 120px; /* Aumente a largura do botão para acomodar o texto */
+  border-radius: 3px;
+  background-color: rgb(33, 153, 107);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 20px; /* Adicione um espaçamento inferior ao botão */
+}
+
+button:hover {
+  background-color: #581004;
+  transition: 0.5s;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  background-color: #F1F5F8;
+  padding: 8px;
+  border-left: 2px solid tomato;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 2px;
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+}
+
+ul li input[type="checkbox"] {
+  margin-left: auto; /* Coloca o checkbox à direita */
+  width: 40px;
+  top: 50%;
+  right: 10px;
+  transform: scale(0.4);
+}
+
+ul li label {
+  flex: 1;
+}
+
+ul li:hover {
+  background: #ae8f8f;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 20px 0 0; /* Adicione margem à direita e na parte inferior do card */
+  width: 400px; /* Defina a largura dos cards */
+  float: left; /* Faça os cards flutuarem à esquerda para que eles apareçam lado a lado */
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+
+
+.input_container {
+  background-color: white;
+  width: 400px;
+  margin: auto;
+  margin-top: 0px;
+  border-radius: 5px;
+  box-shadow: 2px 3px 3px 2px gray;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto; 
+}
+
+.card li {
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+.task-label {
+  flex: 1;
+  margin-right: 30px; 
+  position: relative; 
+}
+
+

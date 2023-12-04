@@ -1,0 +1,43 @@
+.footer {
+    background-color: var(--light-gray);        
+    color: var(--gray);
+    font-size: 18px;
+    margin-top: 50px; 
+}
+
+.footer__container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-flow: row wrap;
+    padding: 20px;
+}
+
+.footer__copyright {
+    text-align: center;
+    margin-top: 20px;
+    background-color: white;    
+    font-weight: bold;
+    padding: 20px;
+    color: #D9D9D9;
+}
+
+.footer__title {
+    font-size: 22px;
+    font-weight: bold;
+    color: rgb(33, 153, 107);
+    margin-bottom: 5px;
+}
+
+.footer__about-text {
+    width: 400px;
+    text-align: justify;
+}
+
+
+.footer i {
+    color: #581004;
+}
+
+.footer li {
+    margin: 10px 0;
+}

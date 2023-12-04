@@ -1,0 +1,193 @@
+.input_container {
+  background-color: white;
+  width: 400px;
+  margin: auto;
+  margin-top: 0px;
+  border-radius: 5px;
+  box-shadow: 2px 3px 3px 2px gray;
+  cursor: pointer;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+
+.progress-bar-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: rgb(33, 153, 107);
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-weight: bold;
+}
+
+
+
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 2px 3px 3px 2px gray;
+  padding: 20px;
+  margin: 20px 20px 0 0;
+  width: 400px;
+  float: left;
+  margin-top: 20px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.container h1 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.material-icons {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+input {
+  margin-top: 8px;
+  margin-left: 8px;
+  margin-bottom: 20px;
+  width: 280px;
+  height: 35px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  margin-right: 5px;
+  outline: 0;
+  padding: 5px;
+}
+
+button i {
+  margin-right: 5px;
+}
+
+button {
+  height: 36px;
+  width: 120px;
+  border-radius: 3px;
+  background-color: rgb(33, 153, 107);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #581004;
+  transition: 0.5s;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-name {
+  margin: 0;
+  cursor: pointer;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: #581004;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.card li {
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li a {
+  color: black;
+}
+
+ul li {
+  display: flex;
+  align-items: center;
+  background-color: lightgray;
+  border-left: 5px solid #581004;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 2px;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+ul li .task-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+ul li i.material-icons {
+  cursor: pointer;
+  margin-left: auto;
+}
+
+ul li .checkbox {
+  margin-left: 5px;
+  width: 18px;
+}
+
+ul li .task-label {
+  max-width: 200px;
+  flex-grow: 1;
+  margin-right: 10px;
+  font-size: 16px;
+  overflow-wrap: break-word;
+}
+
+ul li.concluida {
+  background-color: lightgray;
+  border-left: 5px solid rgb(33, 153, 107);
+}
+
+ul li:hover {
+  background: white;
+}
+
+.task-label {
+  flex: 1;
+  margin-right: 30px;
+  position: relative;
+  font-size: 16px;
+}
+
+
+
