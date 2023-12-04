@@ -4,6 +4,10 @@ Aplicação para gestão e acompanhamento de status de tarefas e percentual de c
 
 ## Endereço de Deploy - GitHub Pages
 
+## Aplicação em produção
+
+https://diegusmao.github.io/gestor-de-status/
+
 ## Protótipo
 
 [https://www.figma.com/file/a1VDbO1aNfZyulQPxT99OE/beleza-em-dia?node-id=3%3A80](https://www.figma.com/file/EXOd0Hotn7SFwv07p01MCc/Untitled?type=design&node-id=0%3A1&mode=design&t=gYzxXcBimlbQ6tGg-1)
