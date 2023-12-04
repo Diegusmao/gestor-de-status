@@ -1,3 +1,4 @@
+import { EventEmitter, Output, Input } from '@angular/core';
 // projeto.component.ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProjetoTarefaService } from 'src/app/projeto/tarefa/projeto-tarefa.service';
@@ -7,17 +8,21 @@ import { Tarefa } from '../models/tarefa.model';
 @Component({
   selector: 'app-projeto',
   templateUrl: './projeto.component.html',
-  styleUrls: ['./projeto.component.css']
+  styleUrls: ['./projeto.component.css'],
 })
 export class ProjetoComponent implements OnInit {
   PROJETO_KEY = 'projeto_key';
   listaProjetos: Projeto[] = [];
   nomeProjeto: string = '';
 
-  @ViewChild('projetoInput', { static: false }) projetoInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('projetoInput', { static: false })
+  projetoInput!: ElementRef<HTMLInputElement>;
+  @Input() projetoSelecionado: Projeto = {} as Projeto;
+  @Output() projetoRemovido: EventEmitter<Projeto> =
+    new EventEmitter<Projeto>();
 
   constructor(private projetoTarefaService: ProjetoTarefaService) {
-    this.projetoTarefaService.projetosObservable.subscribe(projetos => {
+    this.projetoTarefaService.projetosObservable.subscribe((projetos) => {
       this.listaProjetos = projetos;
     });
   }
@@ -40,20 +45,35 @@ export class ProjetoComponent implements OnInit {
     }
 
     try {
+      const ultimoIdProjeto =
+        this.listaProjetos.length > 0
+          ? this.listaProjetos[this.listaProjetos.length - 1].id || 0
+          : 0;
+
       const novoProjeto: Projeto = {
-        id: this.listaProjetos.length + 1,
+        id: null,
         nome: this.nomeProjeto,
         nomeTarefa: '',
         dataInicio: new Date(),
-        horaInicio: this.formatarHora(new Date()), 
+        horaInicio: this.formatarHora(new Date()),
         tarefas: [],
-        mostrarTarefas: false,
+        mostrarTarefas: true,
         percentualConclusao: 0,
       };
 
+      const projetoExistente = this.listaProjetos.find(
+        (projetoLista) => projetoLista.nome === novoProjeto.nome
+      );
+
+      if (projetoExistente) {
+        alert('Um projeto já existe com este nome. Não poderá ser adiconado.');
+
+        return;
+      }
+
       await this.projetoTarefaService.adicionarProjeto(novoProjeto);
       this.nomeProjeto = '';
-      this.setFocusNoInput();
+      this.setFocusOnInput();
     } catch (error: any) {
       console.error('Erro ao adicionar projeto:', error.message);
     }
@@ -61,10 +81,14 @@ export class ProjetoComponent implements OnInit {
 
   async adicionarTarefa(projeto: Projeto): Promise<void> {
     if (projeto.nomeTarefa.trim()) {
-      
-
       try {
-        await this.projetoTarefaService.adicionarTarefa(projeto, projeto.nomeTarefa);
+        await this.projetoTarefaService.adicionarTarefa(
+          projeto,
+          projeto.nomeTarefa
+        );
+
+        console.log('teste');
+
         projeto.nomeTarefa = '';
       } catch (error: any) {
         console.error('Erro ao adicionar tarefa:', error.message);
@@ -79,6 +103,8 @@ export class ProjetoComponent implements OnInit {
   async removerProjeto(projeto: Projeto): Promise<void> {
     try {
       await this.projetoTarefaService.removerProjeto(projeto);
+      // Emitir evento para informar a remoção do projeto
+      this.projetoRemovido.emit(projeto);
     } catch (error: any) {
       console.error('Erro ao remover projeto:', error.message);
     }
@@ -86,13 +112,13 @@ export class ProjetoComponent implements OnInit {
 
   async removerTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
     try {
-      await this.projetoTarefaService.removerTarefa(projeto, tarefa);
+      await this.projetoTarefaService.removerTarefa(projeto.id, tarefa.id);
     } catch (error: any) {
       console.error('Erro ao remover tarefa:', error.message);
     }
   }
 
-  setFocusNoInput(): void {
+  setFocusOnInput(): void {
     this.projetoInput.nativeElement.focus();
   }
 
@@ -102,18 +128,17 @@ export class ProjetoComponent implements OnInit {
     return `${horas}:${minutos}`;
   }
 
-  async marcarTarefaConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
-    tarefa.concluida = !tarefa.concluida;
-    await this.projetoTarefaService.atualizarTarefa(projeto, tarefa);
-  }
-
   async marcarDesmarcarTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
     if (tarefa.concluida) {
-      await this.projetoTarefaService.desmarcarTarefaComoConcluida(projeto, tarefa);
+      await this.projetoTarefaService.desmarcarTarefaComoConcluida(
+        projeto,
+        tarefa
+      );
     } else {
-      await this.projetoTarefaService.marcarTarefaComoConcluida(projeto, tarefa);
+      await this.projetoTarefaService.marcarTarefaComoConcluida(
+        projeto,
+        tarefa
+      );
     }
   }
-
-  
 }

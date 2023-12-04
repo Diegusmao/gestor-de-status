@@ -25,107 +25,166 @@
       "perfil": "GESTDESENVOLVEDOR"
     }
   ],
-  "projetos": [
-    {
-      "id": 1,
-      "nome": "Projeto 1",
-      "nomeTarefa": "Tarefa do Projeto 1",
-      "tarefas": [
-        {
-          "id": 1,
-          "nome": "Tarefa 1",
-          "descricao": "Descrição da Tarefa 1",
-          "projetoId": 1,
-          "concluida": false,
-          "peso": 2,
-          "atividades": [
-            {
-              "id": 1,
-              "descricao": "Atividade 1.1",
-              "concluida": false
-            },
-            {
-              "id": 2,
-              "descricao": "Atividade 1.2",
-              "concluida": true
-            }
-          ]
-        },
-        {
-          "id": 2,
-          "nome": "Tarefa 2",
-          "descricao": "Descrição da Tarefa 2",
-          "projetoId": 1,
-          "concluida": true,
-          "peso": 3,
-          "atividades": [
-            {
-              "id": 3,
-              "descricao": "Atividade 2.1",
-              "concluida": false
-            }
-          ]
-        }
-      ]
-    },
+  "tarefas": [
     {
       "id": 2,
-      "nome": "Projeto 2",
-      "nomeTarefa": "Tarefa do Projeto 2",
-      "tarefas": [
-        {
-          "id": 3,
-          "nome": "Tarefa 3",
-          "descricao": "Descrição da Tarefa 3",
-          "projetoId": 2,
-          "concluida": true,
-          "peso": 1,
-          "atividades": [
-            {
-              "id": 4,
-              "descricao": "Atividade 3.1",
-              "concluida": true
-            }
-          ]
-        },
-        {
-          "id": 4,
-          "nome": "Tarefa 4",
-          "descricao": "Descrição da Tarefa 4",
-          "projetoId": 2,
-          "concluida": false,
-          "peso": 2,
-          "atividades": [
-            {
-              "id": 5,
-              "descricao": "Atividade 4.1",
-              "concluida": false
-            }
-          ]
-        }
-      ]
+      "nome": "87498645",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 6,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
     },
     {
-      "id": 50,
-      "nome": "testpostman",
-      "nomeTarefa": "Tarefa do Projeto 50",
+      "id": 3,
+      "nome": "585",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 6,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 6,
+      "nome": "e3333",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 5,
+      "concluida": true,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 9,
+      "nome": "sadasdasd",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 5,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 10,
+      "nome": "6351",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 7,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 11,
+      "nome": ".562",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 7,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 12,
+      "nome": "63541",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 7,
+      "concluida": true,
+      "peso": 1,
+      "atividades": []
+    },
+    {
+      "id": 13,
+      "nome": "6351",
+      "descricao": "Descrição da Tarefa",
+      "projetoId": 7,
+      "concluida": false,
+      "peso": 1,
+      "atividades": []
+    }
+  ],
+  "projetos": [
+    {
+      "id": 5,
+      "nome": "55",
+      "nomeTarefa": "",
+      "dataInicio": "2023-12-03T23:20:02.217Z",
+      "horaInicio": "20:20",
       "tarefas": [
         {
-          "id": 100,
-          "nome": "testepostman",
-          "descricao": "Descrição da Tarefa 1",
-          "projetoId": 50,
+          "id": 6,
+          "nome": "e3333",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 5,
+          "concluida": true,
+          "peso": 1,
+          "atividades": []
+        },
+        {
+          "id": 9,
+          "nome": "sadasdasd",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 5,
           "concluida": false,
-          "peso": 2,
-          "atividades": [
-            {
-              "id": 200,
-              "descricao": "Atividade 200",
-              "concluida": false
-            }
-          ]
+          "peso": 1,
+          "atividades": []
         }
-      ]
+      ],
+      "mostrarTarefas": true,
+      "percentualConclusao": 50
+    },
+    {
+      "id": 6,
+      "nome": "5641456",
+      "nomeTarefa": "",
+      "dataInicio": "2023-12-03T23:31:03.924Z",
+      "horaInicio": "20:31",
+      "tarefas": [],
+      "mostrarTarefas": true,
+      "percentualConclusao": 0
+    },
+    {
+      "id": 7,
+      "nome": "210",
+      "nomeTarefa": "",
+      "dataInicio": "2023-12-03T23:44:04.578Z",
+      "horaInicio": "20:44",
+      "tarefas": [
+        {
+          "id": 10,
+          "nome": "6351",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 7,
+          "concluida": false,
+          "peso": 1,
+          "atividades": []
+        },
+        {
+          "id": 11,
+          "nome": ".562",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 7,
+          "concluida": false,
+          "peso": 1,
+          "atividades": []
+        },
+        {
+          "id": 12,
+          "nome": "63541",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 7,
+          "concluida": true,
+          "peso": 1,
+          "atividades": []
+        },
+        {
+          "id": 13,
+          "nome": "6351",
+          "descricao": "Descrição da Tarefa",
+          "projetoId": 7,
+          "concluida": false,
+          "peso": 1,
+          "atividades": []
+        }
+      ],
+      "mostrarTarefas": true,
+      "percentualConclusao": 25
     }
   ]
 }
