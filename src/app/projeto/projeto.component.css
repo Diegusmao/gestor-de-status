@@ -108,6 +108,7 @@ button:hover {
 
 .project-name {
   margin: 0;
+  cursor: pointer;
 }
 
 .delete-icon {
@@ -187,3 +188,6 @@ ul li:hover {
   position: relative;
   font-size: 16px;
 }
+
+
+

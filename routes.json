@@ -1,0 +1,4 @@
+{
+  "/api/*": "/$1",
+  "/projetos/:idProjeto/tarefas/:idTarefa": "/projetos/:idProjeto/tarefas/:idTarefa"
+}

@@ -3,23 +3,45 @@ import { Projeto } from 'src/app/models/projeto.model';
 import { Tarefa } from 'src/app/models/tarefa.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import axios from 'axios';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjetoTarefaService {
+  private ultimoIdTarefa: number = 0;
   private readonly PROJETOS_KEY = 'projetos';
-  private projetosSubject: BehaviorSubject<Projeto[]> = new BehaviorSubject<Projeto[]>([]);
-  projetosObservable: Observable<Projeto[]> = this.projetosSubject.asObservable();
-  private percentualConclusaoSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  percentualConclusaoObservable: Observable<number> = this.percentualConclusaoSubject.asObservable();
+
+  private projetosSubject: BehaviorSubject<Projeto[]> = new BehaviorSubject<
+    Projeto[]
+  >([]);
+
+  projetosObservable: Observable<Projeto[]> =
+    this.projetosSubject.asObservable();
+
+  private percentualConclusaoSubject: BehaviorSubject<number> =
+    new BehaviorSubject<number>(0);
+
+  percentualConclusaoObservable: Observable<number> =
+    this.percentualConclusaoSubject.asObservable();
 
   constructor() {
-    this.projetos = this.obterProjetosLocalStorage();
-    this.atualizarPercentualConclusao();
+    this.init();
+    // this.atualizarPercentualConclusao();
+  }
+
+  private async init() {
+    try {
+      const projetosDB = await this.obterProjetosDB();
+      this.projetos = projetosDB || [];
+      // this.atualizarPercentualConclusao();
+    } catch (error) {
+      console.error('Erro ao inicializar:', error);
+    }
   }
 
   private inicializarTarefas(projeto: Projeto): void {
-    projeto.tarefas.forEach(tarefa => {
+    projeto.tarefas.forEach((tarefa) => {
       if (tarefa.concluida === undefined) {
         tarefa.concluida = false;
       }
@@ -27,8 +49,8 @@ export class ProjetoTarefaService {
   }
 
   private set projetos(value: Projeto[]) {
-    this.projetosSubject.next(value);
-    this.atualizarPercentualConclusao();
+    this.projetosSubject.next(value ? value : []);
+    // this.atualizarPercentualConclusao();
     this.salvarProjetosNoLocalStorage();
   }
 
@@ -36,41 +58,80 @@ export class ProjetoTarefaService {
     return this.projetosSubject.getValue();
   }
 
-  private atualizarPercentualConclusao() {
-    const projetos = this.projetos;
-    const totalTarefas = projetos.reduce((acc, projeto) => acc + projeto.tarefas.length, 0);
-    const tarefasConcluidas = projetos.reduce(
-      (acc, projeto) =>
-        acc + projeto.tarefas.filter((tarefa) => tarefa.concluida).length,
-      0
-    );
-    const percentualConclusao = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
-    this.percentualConclusaoSubject.next(percentualConclusao);
-    this.salvarProjetosNoLocalStorage();
+  private async refreshProjetos(id: number | null = null): Promise<void> {
+    if (id) {
+      const projetoById = await this.obterProjetoByIdDB(id);
+
+      // Verificar se o projeto com o ID já existe na lista
+      const projetoExistente = this.projetos.find(
+        (projeto) => projeto.id === id
+      );
+
+      if (projetoExistente) {
+        // Atualizar a lista substituindo o projeto existente pelo projetoById
+        this.projetos = this.projetos.map((projeto) =>
+          projeto.id === id ? projetoById : projeto
+        );
+      } else {
+        // Adicionar o projetoById à lista
+        this.projetos = [...this.projetos, projetoById];
+      }
+    } else {
+      this.projetos = await this.obterProjetosDB();
+    }
   }
 
-  private calcularPercentualConclusaoProjeto(projeto: Projeto): void {
+  private async calcularPercentualConclusaoProjeto(
+    projetoId: number
+  ): Promise<void> {
+    const projeto = await this.obterProjetoByIdDB(projetoId);
+
     const totalTarefas = projeto.tarefas.length;
-    const tarefasConcluidas = projeto.tarefas.filter(tarefa => tarefa.concluida).length;
-    const percentualConclusao = totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
+
+    const tarefasConcluidas = projeto.tarefas.filter(
+      (tarefa) => tarefa.concluida
+    ).length;
+
+    const percentualConclusao =
+      totalTarefas > 0 ? (tarefasConcluidas / totalTarefas) * 100 : 0;
+
     projeto.percentualConclusao = percentualConclusao;
-    this.atualizarPercentualConclusao(); 
+
+    await this.atualizarProjetoDB(projeto);
   }
 
-  
+  private async adicionarProjetoDB(projeto: Projeto): Promise<Projeto> {
+    const apiUrl = 'http://localhost:3000/projetos';
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const response = await axios.post(apiUrl, projeto, headers);
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição POST:', error);
+      throw error;
+    }
+  }
+
   async adicionarProjeto(projeto: Projeto): Promise<void> {
     try {
-      projeto.dataInicio = new Date();
-      projeto.horaInicio = this.formatarHora(projeto.dataInicio);
-      projeto.mostrarTarefas = false;
-      projeto.percentualConclusao = 0;
       this.inicializarTarefas(projeto);
-      this.projetos.push(projeto);
+
+      // this.projetos.push(projeto);
+      const response: Projeto = await this.adicionarProjetoDB(projeto);
+
+      await this.refreshProjetos(response.id);
     } catch (error) {
       console.error('Erro ao adicionar projeto:', error);
       throw error;
     } finally {
-      this.atualizarPercentualConclusao();
+      // this.atualizarPercentualConclusao();
     }
   }
 
@@ -80,21 +141,46 @@ export class ProjetoTarefaService {
     return `${horas}:${minutos}`;
   }
 
+  private async adicionarTarefaDB(tarefa: Tarefa): Promise<Tarefa> {
+    const apiUrl = `http://localhost:3000/tarefas`;
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const response = await axios.post(apiUrl, tarefa, headers);
+      return response.data;
+    } catch (error) {
+      console.error('Erro na requisição POST:', error);
+      throw error;
+    }
+  }
+
   async adicionarTarefa(projeto: Projeto, nomeTarefa: string): Promise<void> {
+    if (projeto === null || projeto.id === null) {
+      throw new Error('adicionarTarefa recebeu o código do projeto null');
+    }
+
     try {
       const novaTarefa = {
-        id: projeto.tarefas.length + 1,
+        id: null,
         nome: nomeTarefa,
         descricao: 'Descrição da Tarefa',
         projetoId: projeto.id,
         concluida: false,
         peso: 1,
-        atividades: []
+        atividades: [],
       };
 
-      projeto.tarefas.push(novaTarefa);
-      await this.atualizarProjeto(projeto);
-      this.calcularPercentualConclusaoProjeto(projeto);
+      // DB
+      const result = await this.adicionarTarefaDB(novaTarefa);
+
+      await this.calcularPercentualConclusaoProjeto(projeto.id);
+
+      await this.refreshProjetos(result.projetoId);
     } catch (error) {
       console.error('Erro ao adicionar tarefa:', error);
       throw error;
@@ -107,7 +193,7 @@ export class ProjetoTarefaService {
 
   async obterProjetoPorId(projetoId: number): Promise<Projeto | undefined> {
     try {
-      return this.projetos.find(projeto => projeto.id === projetoId);
+      return this.projetos.find((projeto) => projeto.id === projetoId);
     } catch (error) {
       console.error('Erro ao obter projeto por ID:', error);
       throw error;
@@ -116,7 +202,7 @@ export class ProjetoTarefaService {
 
   async atualizarProjeto(projeto: Projeto): Promise<void> {
     try {
-      const index = this.projetos.findIndex(p => p.id === projeto.id);
+      const index = this.projetos.findIndex((p) => p.id === projeto.id);
       if (index !== -1) {
         this.projetos[index] = projeto;
         this.salvarProjetosNoLocalStorage();
@@ -127,12 +213,36 @@ export class ProjetoTarefaService {
     }
   }
 
+  private async removerProjetoDB(idProjeto: number | null): Promise<void> {
+    const apiUrl = `http://localhost:3000/projetos/${idProjeto}`;
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      await axios.delete(apiUrl, headers);
+      this.refreshProjetos();
+    } catch (error) {
+      console.error('Erro na requisição DELETE:', error);
+      throw error;
+    }
+  }
+
   async removerProjeto(projeto: Projeto): Promise<void> {
     try {
       const index = this.projetos.indexOf(projeto);
       if (index !== -1) {
+        // Local Storage
         this.projetos.splice(index, 1);
-        this.salvarProjetosNoLocalStorage();
+        await this.atualizarLocalStorage();
+
+        // DB
+        await this.removerProjetoDB(projeto.id);
+
+        await this.refreshProjetos();
       }
     } catch (error) {
       console.error('Erro ao remover projeto:', error);
@@ -140,11 +250,14 @@ export class ProjetoTarefaService {
     }
   }
 
-  async obterTarefaPorId(projetoId: number, tarefaId: number): Promise<Tarefa | undefined> {
+  async obterTarefaPorId(
+    projetoId: number,
+    tarefaId: number
+  ): Promise<Tarefa | undefined> {
     try {
       const projeto = await this.obterProjetoPorId(projetoId);
       if (projeto) {
-        return projeto.tarefas.find(tarefa => tarefa.id === tarefaId);
+        return projeto.tarefas.find((tarefa) => tarefa.id === tarefaId);
       }
       return undefined;
     } catch (error) {
@@ -153,26 +266,73 @@ export class ProjetoTarefaService {
     }
   }
 
-  async removerTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+  async removerTarefa(
+    projetoId: number | null,
+    tarefaId: number | null
+  ): Promise<void> {
     try {
-      const index = projeto.tarefas.indexOf(tarefa);
-      if (index !== -1) {
-        projeto.tarefas.splice(index, 1);
-        await this.atualizarProjeto(projeto);
-        
+      if (tarefaId === null) {
+        throw new Error('Remover Tarefa recebeu tarefaId = null');
       }
+
+      if (projetoId === null) {
+        throw new Error('Remover Tarefa recebeu projetoId = null');
+      }
+
+      //DB
+      await this.removerTarefaDB(tarefaId);
+
+      await this.calcularPercentualConclusaoProjeto(projetoId);
+
+      this.refreshProjetos(projetoId);
     } catch (error) {
       console.error('Erro ao remover tarefa:', error);
       throw error;
     }
   }
 
-  private obterProjetosLocalStorage(): Projeto[] {
+  private async removerTarefaDB(idTarefa: number): Promise<void> {
+    const apiUrl = `http://localhost:3000/tarefas/${idTarefa}`;
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
     try {
-      const projetos = localStorage.getItem(this.PROJETOS_KEY);
-      return projetos ? JSON.parse(projetos) : [];
+      await axios.delete(apiUrl, headers);
+      this.refreshProjetos();
     } catch (error) {
-      console.error('Erro ao obter projetos do armazenamento local:', error);
+      console.error('Erro na requisição DELETE:', error);
+      throw error;
+    }
+  }
+
+  private async obterProjetosDB(): Promise<Projeto[]> {
+    const apiUrl = 'http://localhost:3000/projetos?_embed=tarefas';
+
+    try {
+      const response = await axios.get(apiUrl);
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro na requisição GET:', error);
+      throw error;
+    }
+  }
+
+  private async obterProjetoByIdDB(id: number | null): Promise<Projeto> {
+    if (!id) {
+      throw new Error('Id enviado para obterProjetoByIdDB está null');
+    }
+
+    const apiUrl = `http://localhost:3000/projetos/${id}?_embed=tarefas`;
+
+    try {
+      const response = await axios.get(apiUrl);
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro na requisição GET:', error);
       throw error;
     }
   }
@@ -181,49 +341,92 @@ export class ProjetoTarefaService {
     localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));
   }
 
-  async marcarTarefaComoConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+  async marcarTarefaComoConcluida(
+    projeto: Projeto,
+    tarefa: Tarefa
+  ): Promise<void> {
+    if (projeto == null || projeto.id == null) {
+      throw new Error(
+        'marcarTarefaComoConcluida reccebeu projeto ou projeto.id null'
+      );
+    }
+
     try {
       tarefa.concluida = true;
-      await this.atualizarTarefa(projeto, tarefa);
-      this.calcularPercentualConclusaoProjeto(projeto);
+
+      await this.atualizarTarefaDB(tarefa);
+      await this.calcularPercentualConclusaoProjeto(projeto.id);
+
+      this.refreshProjetos(projeto.id);
     } catch (error) {
       console.error('Erro ao marcar tarefa como concluída:', error);
       throw error;
     }
   }
-  
-  async desmarcarTarefaComoConcluida(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+
+  async desmarcarTarefaComoConcluida(
+    projeto: Projeto,
+    tarefa: Tarefa
+  ): Promise<void> {
+    if (projeto == null || projeto.id == null) {
+      throw new Error(
+        'marcarTarefaComoConcluida reccebeu projeto ou projeto.id null'
+      );
+    }
+
     try {
       tarefa.concluida = false;
-      await this.atualizarTarefa(projeto, tarefa);
-      this.calcularPercentualConclusaoProjeto(projeto);
+
+      await this.atualizarTarefaDB(tarefa);
+      await this.calcularPercentualConclusaoProjeto(projeto.id);
+
+      this.refreshProjetos(projeto.id);
     } catch (error) {
-      console.error('Erro ao desmarcar tarefa como concluída:', error);
+      console.error('Erro ao marcar tarefa como concluída:', error);
       throw error;
     }
   }
 
-  
-
-  async atualizarTarefa(projeto: Projeto, tarefa: Tarefa): Promise<void> {
+  async atualizarTarefaDB(tarefa: Tarefa): Promise<Tarefa> {
     try {
-      const projetoIndex = this.projetos.findIndex(p => p.id === projeto.id);
-      if (projetoIndex !== -1) {
-        const tarefaIndex = this.projetos[projetoIndex].tarefas.findIndex(t => t.id === tarefa.id);
-        if (tarefaIndex !== -1) {
-          this.projetos[projetoIndex].tarefas[tarefaIndex] = tarefa;
-          await this.atualizarLocalStorage();
-          this.atualizarPercentualConclusao();
-        }
-      }
+      const apiUrl = `http://localhost:3000/tarefas/${tarefa.id}`;
+
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = await axios.put(apiUrl, tarefa, headers);
+      return response.data || [];
     } catch (error) {
       console.error('Erro ao atualizar tarefa:', error);
       throw error;
     } finally {
-      this.atualizarPercentualConclusao();
+      // this.atualizarPercentualConclusao();
     }
   }
-  
+
+  async atualizarProjetoDB(projeto: Projeto): Promise<Projeto> {
+    try {
+      const apiUrl = `http://localhost:3000/projetos/${projeto.id}`;
+
+      const headers = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const response = await axios.put(apiUrl, projeto, headers);
+      return response.data || [];
+    } catch (error) {
+      console.error('Erro ao atualizar projeto:', error);
+      throw error;
+    } finally {
+      // this.atualizarPercentualConclusao();
+    }
+  }
+
   private async atualizarLocalStorage(): Promise<void> {
     try {
       localStorage.setItem(this.PROJETOS_KEY, JSON.stringify(this.projetos));

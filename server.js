@@ -54,6 +54,35 @@ app.delete('/api/projetos/:id', (req, res) => {
   }
 });
 
+
+
+app.post('/api/tarefas', (req, res) => {
+  const data = fs.readFileSync('db.json', 'utf-8');
+  const projetos = JSON.parse(data);
+  const payload = req.body;
+  const payloadObj = JSON.parse(payload);
+  console.log("teste");
+  if (payloadObj && payloadObj.idProjeto && payloadObj.idTarefa) {
+    console.log("teste");
+
+    const projeto = this.projetos.find(projeto => projeto.id === payloadObj.idProjeto);
+
+    if (projeto) {
+      projeto.tarefas = projeto.tarefas.filter(tarefa => tarefa.id !== payloadObj.idTarefa);
+    }
+
+    if (projeto.id !== -1) {
+      fs.writeFileSync('db.json', JSON.stringify(projetos));
+      res.json(projetos);
+    } else {
+      res.status(404).json({ message: 'Projeto não encontrado' });
+    }
+  }
+
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

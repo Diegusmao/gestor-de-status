@@ -1,0 +1,7 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "cSpell.enabled": false,
+  "appService.defaultWebAppToDeploy": "/subscriptions/f27e0dd5-4da4-4c97-b1b3-f0fa7b53d8f9/resourceGroups/posJava-frameworks-diddo/providers/Microsoft.Web/sites/posJava-frameworks-diddo",
+  "appService.deploySubpath": "."
+}

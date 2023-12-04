@@ -2,42 +2,72 @@
 
 <div class="input_container">
   <h3>Criar Projeto</h3>
-  <input #projetoInput type="text" placeholder="Nome do Projeto" [(ngModel)]="nomeProjeto" />
+  <input
+    #projetoInput
+    type="text"
+    placeholder="Nome do Projeto"
+    [(ngModel)]="nomeProjeto"
+  />
   <button (click)="adicionarProjeto()">Criar Projeto</button>
 </div>
 
 <div class="container">
   <div *ngFor="let projeto of listaProjetos" class="card">
-
-    
     <div class="project-header">
-      <h1 class="project-name" (click)="toggleTarefas(projeto)">{{ projeto.nome }}</h1>
-      <i (click)="removerProjeto(projeto)" class="material-icons delete-icon">delete</i>
+      <h1 class="project-name" (click)="toggleTarefas(projeto)">
+        {{ projeto.nome }}
+      </h1>
+      <i (click)="removerProjeto(projeto)" class="material-icons delete-icon"
+        >delete</i
+      >
     </div>
-    
 
     <div class="progress-bar-container">
-      <div class="progress-bar" [style.width.%]="projeto.percentualConclusao">
-      </div>
-      <span class="progress-text">{{ projeto.percentualConclusao | number:'1.2-2' }}%</span>
+      <div
+        class="progress-bar"
+        [style.width.%]="projeto.percentualConclusao"
+      ></div>
+      <span class="progress-text"
+        >{{ projeto.percentualConclusao | number : "1.2-2" }}%</span
+      >
     </div>
 
-    <p><br>Data de Início: {{ projeto.dataInicio | date:'dd/MMM/yyyy' }}</p>
+    <p><br />Data de Início: {{ projeto.dataInicio | date : "dd/MMM/yyyy" }}</p>
     <p>Hora de Início: {{ projeto.horaInicio }}</p>
-    <input *ngIf="projeto.mostrarTarefas" type="text" placeholder="Adicionar Tarefa" [(ngModel)]="projeto.nomeTarefa" />
-    <button *ngIf="projeto.mostrarTarefas" (click)="adicionarTarefa(projeto)">Adicionar Tarefa</button>
-    
+    <input
+      *ngIf="projeto.mostrarTarefas"
+      type="text"
+      placeholder="Adicionar Tarefa"
+      [(ngModel)]="projeto.nomeTarefa"
+    />
+    <button *ngIf="projeto.mostrarTarefas" (click)="adicionarTarefa(projeto)">
+      Adicionar Tarefa
+    </button>
+
     <ul *ngIf="projeto.mostrarTarefas">
-      <li *ngFor="let tarefa of projeto.tarefas" [ngClass]="{'concluida': tarefa.concluida}">
+      <li
+        *ngFor="let tarefa of projeto.tarefas"
+        [ngClass]="{ concluida: tarefa.concluida }"
+      >
         <div class="task-container">
-          <input type="checkbox" [ngModel]="tarefa.concluida" (change)="marcarDesmarcarTarefa(projeto, tarefa)" class="checkbox" />
+          <input
+            type="checkbox"
+            [ngModel]="tarefa.concluida"
+            (change)="marcarDesmarcarTarefa(projeto, tarefa)"
+            class="checkbox"
+          />
 
           <a [routerLink]="['/projeto', projeto.id, 'tarefa', tarefa.id]">
             <label class="task-label">
               {{ tarefa.nome }}
             </label>
           </a>
-          <i (click)="removerTarefa(projeto, tarefa)" class="material-icons delete-icon">delete</i>
+
+          <i
+            (click)="removerTarefa(projeto, tarefa)"
+            class="material-icons delete-icon"
+            >delete</i
+          >
         </div>
       </li>
     </ul>
